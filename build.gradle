@@ -1,7 +1,7 @@
 plugins {
 	id 'java'
 	id 'war'
-	id 'org.springframework.boot' version '3.2.4'
+	id 'org.springframework.boot' version '3.2.5'
 	id 'io.spring.dependency-management' version '1.1.4'
 }
 
@@ -12,12 +12,33 @@ java {
 	sourceCompatibility = '21'
 }
 
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
 repositories {
 	mavenCentral()
 }
 
 dependencies {
+	// Spring Boot
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	// Thymeleaf
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.2.5'
+	// 便利機能、ユーティリティ
+	implementation 'org.apache.commons:commons-lang3:3.14.0'
+	//lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	// MySQLドライバ(古い書き方に注意)
+	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	// MyBatis Spring Boot Starter
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
+
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
