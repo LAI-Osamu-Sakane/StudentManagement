@@ -12,6 +12,11 @@ java {
 	sourceCompatibility = '21'
 }
 
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
 repositories {
 	mavenCentral()
 }
@@ -20,6 +25,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	// 便利機能、ユーティリティ
 	implementation 'org.apache.commons:commons-lang3:3.14.0'
+	//lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
 
 	// MySQLドライバ(古い書き方に注意)
 	runtimeOnly 'com.mysql:mysql-connector-j'
