@@ -3,6 +3,8 @@ package raisetech.StudentManagement.controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +49,8 @@ public class StudentController {
      * @return 受講生
      */
     @GetMapping("/student/{studentId}")
-    public StudentDetail getStudent(@PathVariable @Size(min = 1, max = 6) String studentId) {
+    public StudentDetail getStudent(@PathVariable @Size(min = 1, max = 6, message = "ID must have at least 1 and no more than 6 characters") String studentId) {
+
         return service.searchStudent(studentId);
     }
 
