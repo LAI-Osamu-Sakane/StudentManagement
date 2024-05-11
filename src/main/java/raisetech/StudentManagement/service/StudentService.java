@@ -14,52 +14,52 @@ import raisetech.StudentManagement.repository.StudentRepository;
 @Service
 public class StudentService {
 
-    private StudentRepository repository;
+  private StudentRepository repository;
 
-    @Autowired
-    public StudentService(StudentRepository repository) {
-        this.repository = repository;
-    }
+  @Autowired
+  public StudentService(StudentRepository repository) {
+    this.repository = repository;
+  }
 
-    public List<Student> searchStudentList() {
-        return repository.search();
-    }
+  public List<Student> searchStudentList() {
+    return repository.search();
+  }
 
-    public StudentDetail searchStudent(String studentId) {
-        Student student = repository.searchStudent(studentId);
-        List<StudentsCourses> studentsCourses = repository.searchStudentCourse(student.getStudentId());
-        StudentDetail studentDetail = new StudentDetail();
-        studentDetail.setStudent(student);
-        studentDetail.setStudentsCourses(studentsCourses);
-        return studentDetail;
-    }
+  public StudentDetail searchStudent(String studentId) {
+    Student student = repository.searchStudent(studentId);
+    List<StudentsCourses> studentsCourses = repository.searchStudentCourse(student.getStudentId());
+    StudentDetail studentDetail = new StudentDetail();
+    studentDetail.setStudent(student);
+    studentDetail.setStudentsCourses(studentsCourses);
+    return studentDetail;
+  }
 
-    public List<StudentsCourses> searchStudentsCourseList() {
-        return repository.searchStudentsCoursesList();
-    }
+  public List<StudentsCourses> searchStudentsCourseList() {
+    return repository.searchStudentsCoursesList();
+  }
 
-    //  一連の登録情報がうまくいったときのみ有効とするためのTransactional
-    @Transactional
-    public void registerStudent(StudentDetail studentDetail) {
+  //  一連の登録情報がうまくいったときのみ有効とするためのTransactional
+  @Transactional
+  public void registerStudent(StudentDetail studentDetail) {
 
-        repository.registerStudent(studentDetail.getStudent());
-        //todo:コース情報の登録
-        for(StudentsCourses studentCourse : studentDetail.getStudentsCourses()) {
-            studentCourse.setStudentId(studentDetail.getStudent().getStudentId());
-            studentCourse.setStartingDate(LocalDateTime.now());
-            studentCourse.setScheduledEndDate(LocalDateTime.now().plusYears(1));
-
-        }
-    }
-
-    @Transactional
-    public void updateStudent(StudentDetail studentDetail) {
-        repository.updateStudent(studentDetail.getStudent());
-        for(StudentsCourses studentCourse : studentDetail.getStudentsCourses()) {
-            studentCourse.setStudentId(studentDetail.getStudent().getStudentId());
-            repository.updateStudentCourses(studentCourse);
-        }
+    repository.registerStudent(studentDetail.getStudent());
+    //todo:コース情報の登録
+    for(StudentsCourses studentCourse : studentDetail.getStudentsCourses()) {
+      studentCourse.setStudentId(studentDetail.getStudent().getStudentId());
+      studentCourse.setStartingDate(LocalDateTime.now());
+      studentCourse.setScheduledEndDate(LocalDateTime.now().plusYears(1));
 
     }
+  }
+
+  @Transactional
+  public void updateStudent(StudentDetail studentDetail) {
+    repository.updateStudent(studentDetail.getStudent());
+    for(StudentsCourses studentCourse : studentDetail.getStudentsCourses()) {
+      studentCourse.setStudentId(studentDetail.getStudent().getStudentId());
+      repository.updateStudentCourses(studentCourse);
+    }
+
+  }
 
 }
