@@ -21,7 +21,6 @@ public interface StudentRepository {
    *
    * @return 受講生一覧(全研)
    */
-  @Select("SELECT * FROM students")
   List<Student> search();
 
   /**
@@ -29,7 +28,6 @@ public interface StudentRepository {
    * @param studentId 受講生ID
    * @return　受講生
    */
-  @Select("SELECT * FROM students where studentId = #{studentId}")
   Student searchStudent(String studentId);
 
   /**
@@ -37,7 +35,6 @@ public interface StudentRepository {
    *
    * @return 受講生のコース情報(全件)
    */
-  @Select("SELECT * FROM students_courses")
   List<StudentCourse> searchStudentCourseList();
 
   /**
@@ -46,7 +43,6 @@ public interface StudentRepository {
    * @param studentId 受講生ID
    * @return 受講生IDに紐づく受講生コース情報
    */
-  @Select("SELECT * FROM students_courses WHERE studentId = #{studentId}")
   List<StudentCourse> searchStudentCourse(String studentId);
 
   /**
@@ -54,19 +50,12 @@ public interface StudentRepository {
    *
    * @param student 受講生
    */
-  @Insert("INSERT INTO students (name, kana, nickname, mail, area, age, sex, remark, is_deleted)"
-          + " VALUE(#{name}, #{kana}, #{nickname}, #{mail}, #{area}, #{age}, #{sex}, #{remark}, false)")
-  //MyBatis用の設定、studentIdについて
-  @Options(useGeneratedKeys = true,keyProperty = "studentId")
   void registerStudent(Student student);
 
   /**
    * 受講生コース情報を新規登録します。IDに関しては自動採番を行います。
    * @param studentCourse 受講生コース情報
    */
-  @Insert("INSERT INTO students_courses (studentId, course_name, starting_date, scheduled_end_date)"
-          + " VALUE(#{studentId}, #{courseName}, #{startingDate}, #{scheduledEndDate})")
-  @Options(useGeneratedKeys = true,keyProperty = "courseId")
   void registerStudentCourse(StudentCourse studentCourse);
 
   /**
@@ -74,9 +63,6 @@ public interface StudentRepository {
    *
    * @param student 受講生
    */
-  @Update("UPDATE students Set name = #{name}, kana = #{kana}, nickname = #{nickname},"
-          + " mail = #{mail}, area = #{area}, age = #{age}, sex = #{sex}, remark = #{remark}, is_deleted = #{deleted} WHERE studentId = #{studentId}")
-  //MyBatis用の設定、studentIdについて
   void updateStudent(Student student);
 
   /**
@@ -84,7 +70,6 @@ public interface StudentRepository {
    *
    * @param studentCourse 受講生コース情報
    */
-  @Update("UPDATE students_courses set course_name = #{courseName} WHERE courseId = #{courseId} ")
   void updateStudentCourse(StudentCourse studentCourse);
 
 }
