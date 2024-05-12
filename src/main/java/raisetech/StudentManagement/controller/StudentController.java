@@ -3,6 +3,9 @@ package raisetech.StudentManagement.controller;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -42,6 +45,7 @@ public class StudentController {
      *
      * @return 受講生詳細一覧（全件）
      */
+    @Operation(summary = "一覧検索", description = "受講生一覧を検索します。")
     @GetMapping("/studentList")
     public List<StudentDetail> getStudentList() {
         return service.searchStudentList();
@@ -53,6 +57,7 @@ public class StudentController {
      * @param studentId　受講生ID
      * @return 受講生
      */
+    @Operation(summary = "受講生検索", description = "受講生を検索します。")
     @GetMapping("/student/{studentId}")
     public StudentDetail getStudent(@PathVariable @NotBlank @Pattern(regexp = "^\\d*$") String studentId) {
 
@@ -65,6 +70,7 @@ public class StudentController {
      * @param studentDetail　受講生詳細
      * @return 実行結果
      */
+    @Operation(summary = "受講生登録", description = "受講生を登録します。")
     @PostMapping("/registerStudent")
     public ResponseEntity<StudentDetail> registerStudent(@RequestBody @Valid StudentDetail studentDetail) {
 
@@ -78,6 +84,7 @@ public class StudentController {
      * @param studentDetail 受講生詳細
      * @return 実行結果
      */
+    @Operation(summary = "受講生詳細更新", description = "受講生詳細を登録します。")
     @PutMapping("/updateStudent")
     public ResponseEntity<String> updateStudent(@RequestBody @Valid StudentDetail studentDetail) {
 
@@ -87,9 +94,11 @@ public class StudentController {
 
     /**
      * 例外処理確認用
+     *
      * @return
      * @throws TestException
      */
+    @Operation(summary = "例外処理確認用", description = "例外処理確認をします。")
     @GetMapping("/studentLists")
     public List<StudentDetail> getStudentLists() throws TestException {
         throw new TestException("現在このAPIは使用できません。URLは【studentList】ではなく【students】を利用してください。");
