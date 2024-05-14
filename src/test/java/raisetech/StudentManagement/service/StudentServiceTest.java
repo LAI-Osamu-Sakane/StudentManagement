@@ -14,6 +14,7 @@ import raisetech.StudentManagement.data.StudentCourse;
 import raisetech.StudentManagement.domain.StudentDetail;
 import raisetech.StudentManagement.repository.StudentRepository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,11 +30,11 @@ class StudentServiceTest {
     @Mock
     private StudentConverter converter;
 
-    private StudentService sut
+    private StudentService sut;
 
     @BeforeEach
     void before() {
-        sut = new StudentService(repository, converter)
+        sut = new StudentService(repository, converter);
     }
 
     @Test
@@ -61,5 +62,86 @@ class StudentServiceTest {
 
         //後処理
         //データをもとに戻すなど。今回は無し
+    }
+
+    @Test
+    void 受講生詳細検索_リポジトリの処理が適切に呼び出せていること() {
+
+        //事前準備
+        String studentId = "999";
+        Student student = new Student();
+        student.setStudentId(studentId);
+        List<StudentCourse> studentCourseList = new ArrayList<>();
+        StudentDetail expected = new StudentDetail(student, new ArrayList<>());
+
+        when(repository.searchStudent(studentId)).thenReturn(student);
+        when(repository.searchStudentCourse(student.getStudentId())).thenReturn(studentCourseList);
+
+
+        //実行
+        StudentDetail actual = sut.searchStudent(studentId);
+
+        //検証
+        Assertions.assertEquals(expected.getStudent().getStudentId(), actual.getStudent().getStudentId());
+        verify(repository, times(1)).searchStudent(studentId);
+        verify(repository, times(1)).searchStudentCourse(studentId);
+
+    }
+
+    @Test
+    void 受講生登録_リポジトリの処理が適切に呼び出せていること() {
+
+        //事前準備
+        Student student = new Student();
+        StudentCourse studentCourse = new StudentCourse();
+        List<StudentCourse> studentCourseList = List.of(studentCourse);
+        StudentDetail studentDetail = new StudentDetail(student, studentCourseList);
+
+
+        //実行
+        sut.registerStudent(studentDetail);
+
+        //検証
+        verify(repository, times(1)).registerStudent(student);
+        verify(repository, times(1)).registerStudentCourse(studentCourse);
+
+    }
+
+    @Test
+    void 受講生更新_リポジトリの処理が適切に呼び出せていること() {
+
+        //事前準備
+        Student student = new Student();
+        StudentCourse studentCourse = new StudentCourse();
+        List<StudentCourse> studentCourseList = List.of(studentCourse);
+        StudentDetail studentDetail = new StudentDetail(student, studentCourseList);
+
+
+        //実行
+        sut.updateStudent(studentDetail);
+
+        //検証
+        verify(repository, times(1)).updateStudent(student);
+        verify(repository, times(1)).updateStudentCourse(studentCourse);
+
+    }
+
+    @Test
+    void 受講生詳細登録_初期化処理が行われること() {
+
+        //事前準備
+        String studentId = "999";
+        Student student = new Student();
+        student.setStudentId(studentId);
+        StudentCourse studentCourse = new StudentCourse();
+
+        //実行
+        sut.initStudentsCourse(studentCourse, student);
+
+        //検証
+        Assertions.assertEquals(studentId, student.getStudentId());
+        Assertions.assertEquals(LocalDateTime.now().getHour(), studentCourse.getStartingDate().getHour());
+        Assertions.assertEquals(LocalDateTime.now().plusYears(1).getYear(), studentCourse.getScheduledEndDate().getYear());
+
     }
 }

@@ -14,7 +14,7 @@ import lombok.Setter;
 public class Student {
 
   @NotBlank
-  @Pattern(regexp = "^\\d*$")
+  @Pattern(regexp = "^\\d*$", message = "数値のみ設定してください。")
   @Schema(title = "受講生ID", description = "自動採番が設定されています。")
   private String studentId;
 
