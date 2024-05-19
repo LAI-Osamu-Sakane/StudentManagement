@@ -14,7 +14,7 @@ import lombok.Setter;
 @Setter
 public class StudentCourse {
 
-  @NotBlank
+
   @Pattern(regexp = "^\\d*$")
   @Schema(title = "コースID", description = "自動採番が設定されています。")
   private String courseId;
@@ -27,9 +27,9 @@ public class StudentCourse {
   @NotBlank
   private String courseName;
 
-  @NotBlank
+//  @NotBlank
   private LocalDateTime startingDate;
 
-  @NotBlank
+//  @NotBlank
   private LocalDateTime scheduledEndDate;
 }
