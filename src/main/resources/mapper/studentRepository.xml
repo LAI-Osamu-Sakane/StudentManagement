@@ -32,14 +32,14 @@
     <insert id="registerStudent" parameterType="raisetech.StudentManagement.data.Student" statementType="PREPARED" useGeneratedKeys="true" keyProperty="studentId">
         INSERT INTO students
         (name, kana, nickname, mail, area, age, sex, remark, is_deleted)
-        VALUE(#{name}, #{kana}, #{nickname}, #{mail}, #{area}, #{age}, #{sex}, #{remark}, false)
+        VALUES(#{name}, #{kana}, #{nickname}, #{mail}, #{area}, #{age}, #{sex}, #{remark}, false)
     </insert>
 
     <!-- 受講生コース情報を新規登録 -->
     <insert id="registerStudentCourse" parameterType="raisetech.StudentManagement.data.StudentCourse" statementType="PREPARED" useGeneratedKeys="true" keyProperty="courseId">
         INSERT INTO students_courses
         (studentId, course_name, starting_date, scheduled_end_date)
-        VALUE(#{studentId}, #{courseName}, #{startingDate}, #{scheduledEndDate})
+        VALUES(#{studentId}, #{courseName}, #{startingDate}, #{scheduledEndDate})
     </insert>
 
     <!-- 受講生を更新 -->

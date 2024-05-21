@@ -22,21 +22,14 @@ class StudentConverterTest {
     private StudentConverter sut;
 
     @BeforeEach
-    void before() {sut = new StudentConverter();}
+    void before() {
+        sut = new StudentConverter();
+    }
 
     @Test
     void 受講生情報と受講生コース情報で受講生詳細のリストを作成できていること() {
-        Student student =  new Student();
-        student.setStudentId("123452");
-        student.setName("鈴木 祐輔");
-        student.setKana("スズキ ユウスケ");
-        student.setNickname("ユウスケ");
-        student.setMail("mmm.nn@zzz.com");
-        student.setArea("関東");
-        student.setAge(45);
-        student.setSex("男性");
-        student.setRemark("");
-        student.setDeleted(false);
+
+        Student student = createStudent();
 
         StudentCourse studentCourse = new StudentCourse();
         studentCourse.setCourseId("2");
@@ -58,17 +51,7 @@ class StudentConverterTest {
 
     @Test
     void 受講生情報と紐づかない受講生コース情報は無視されること() {
-        Student student =  new Student();
-        student.setStudentId("123452");
-        student.setName("鈴木 祐輔");
-        student.setKana("スズキ ユウスケ");
-        student.setNickname("ユウスケ");
-        student.setMail("mmm.nn@zzz.com");
-        student.setArea("関東");
-        student.setAge(45);
-        student.setSex("男性");
-        student.setRemark("");
-        student.setDeleted(false);
+        Student student = createStudent();
 
         StudentCourse studentCourse = new StudentCourse();
         studentCourse.setCourseId("2");
@@ -85,7 +68,21 @@ class StudentConverterTest {
         assertThat(actual.get(0).getStudent()).isEqualTo(student);
         assertThat(actual.get(0).getStudentsCourseList()).isEmpty();
 
+    }
 
+    private static Student createStudent() {
+        Student student =  new Student();
+        student.setStudentId("123452");
+        student.setName("鈴木 祐輔");
+        student.setKana("スズキ ユウスケ");
+        student.setNickname("ユウスケ");
+        student.setMail("mmm.nn@zzz.com");
+        student.setArea("関東");
+        student.setAge(45);
+        student.setSex("男性");
+        student.setRemark("");
+        student.setDeleted(false);
+        return student;
     }
 
 }
