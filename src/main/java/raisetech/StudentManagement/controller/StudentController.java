@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import raisetech.StudentManagement.data.ApplicationStatus;
 import raisetech.StudentManagement.domain.StudentDetail;
 import raisetech.StudentManagement.exception.TestException;
 import raisetech.StudentManagement.service.StudentService;
@@ -62,6 +63,17 @@ public class StudentController {
     public StudentDetail getStudent(@PathVariable @NotBlank @Pattern(regexp = "^\\d*$") String studentId) {
 
         return service.searchStudent(studentId);
+    }
+
+    /**
+     * コースIDに紐づく申込状況を取得します。
+     * @param courseId コースID
+     * @return 申込状況
+     */
+    @GetMapping("/application/{courseId}")
+    public ApplicationStatus getApplicationStatus(@PathVariable @NotBlank @Pattern(regexp = "^\\d*$") String courseId) {
+
+        return service.searchApplicationStatus(courseId);
     }
 
     /**

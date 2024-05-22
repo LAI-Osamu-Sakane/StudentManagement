@@ -28,6 +28,19 @@
         WHERE studentId = #{studentId}
     </select>
 
+    <!-- 申込状況の全件検索 -->
+    <select id="searchApplicationStatusList" resultType="raisetech.StudentManagement.data.ApplicationStatus">
+        SELECT *
+        FROM application_status
+    </select>
+
+    <!-- コースIDに紐づく申込状況を検索 -->
+    <select id="searchApplicationStatus" resultType="raisetech.StudentManagement.data.ApplicationStatus">
+        SELECT *
+        FROM application_status
+        WHERE courseId = #{courseId}
+    </select>
+
     <!-- 受講生を新規登録 -->
     <insert id="registerStudent" parameterType="raisetech.StudentManagement.data.Student" statementType="PREPARED" useGeneratedKeys="true" keyProperty="studentId">
         INSERT INTO students
@@ -42,6 +55,13 @@
         VALUES(#{studentId}, #{courseName}, #{startingDate}, #{scheduledEndDate})
     </insert>
 
+    <!-- 申込状況を新規登録 -->
+    <insert id="registerApplicationStatus" parameterType="raisetech.StudentManagement.data.ApplicationStatus" statementType="PREPARED" useGeneratedKeys="true" keyProperty="statusId">
+        INSERT INTO application_status
+        (courseId, status, registration_date)
+        VALUES(#{courseId}, #{status}, #{registrationDate})
+    </insert>
+
     <!-- 受講生を更新 -->
     <update id="updateStudent" parameterType="raisetech.StudentManagement.data.Student" statementType="PREPARED">
         UPDATE students Set
@@ -52,5 +72,11 @@
     <update id="updateStudentCourse" parameterType="raisetech.StudentManagement.data.StudentCourse" statementType="PREPARED">
         UPDATE students_courses set
         course_name = #{courseName} WHERE courseId = #{courseId}
+    </update>
+
+    <!-- 申込状況を更新 -->
+    <update id="updateApplicationStatus" parameterType="raisetech.StudentManagement.data.ApplicationStatus" statementType="PREPARED">
+        UPDATE application_status set
+        status = #{status} WHERE statusId = #{courseId}
     </update>
 </mapper>

@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import raisetech.StudentManagement.data.ApplicationStatus;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentCourse;
 
@@ -24,6 +25,9 @@ public class StudentDetail {
 
   @Valid
   private List<StudentCourse> studentsCourseList;
+
+  @Valid
+  private List<ApplicationStatus> applicationStatusList;
 
 }
 

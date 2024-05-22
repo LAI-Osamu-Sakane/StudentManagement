@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import raisetech.StudentManagement.data.ApplicationStatus;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentCourse;
 
@@ -19,7 +20,7 @@ public interface StudentRepository {
   /**
    * 受講生の全件検索を行います。
    *
-   * @return 受講生一覧(全研)
+   * @return 受講生一覧(全件)
    */
   List<Student> search();
 
@@ -46,6 +47,20 @@ public interface StudentRepository {
   List<StudentCourse> searchStudentCourse(String studentId);
 
   /**
+   * 申込状況の全件検索を行います。
+   *
+   * @return 申込状況(全件)
+   */
+  List<ApplicationStatus> searchApplicationStatusList();
+
+  /**
+   * コースIDに紐づく申込状況を検索します。
+   *
+   * @return コースIDに紐づく申込状況
+   */
+  ApplicationStatus searchApplicationStatus(String courseId);
+
+  /**
    * 受講生を新規登録します。IDに関しては自動採番を行います。
    *
    * @param student 受講生
@@ -57,6 +72,12 @@ public interface StudentRepository {
    * @param studentCourse 受講生コース情報
    */
   void registerStudentCourse(StudentCourse studentCourse);
+
+  /**
+   * 申込状況を新規登録します。IDに関しては自動採番を行います。
+   * @param applicationStatus 申込状況
+   */
+  void registerApplicationStatus(ApplicationStatus applicationStatus);
 
   /**
    * 受講生を更新します。
@@ -72,5 +93,11 @@ public interface StudentRepository {
    */
   void updateStudentCourse(StudentCourse studentCourse);
 
+  /**
+   * 申込状況を更新します。
+   *
+   * @param applicationStatus　申込状況
+   */
+  void updateApplicationStatus(ApplicationStatus applicationStatus);
 }
 

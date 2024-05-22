@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
+import raisetech.StudentManagement.data.ApplicationStatus;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentCourse;
 import raisetech.StudentManagement.domain.StudentDetail;
@@ -22,20 +23,21 @@ public class StudentConverter {
    * @param studentCourseList 受講生コース情報のリスト
    * @return 受講生詳細情報のリスト
    */
-  public List<StudentDetail> convertStudentDetails(List<Student> studentList,
-                                                   List<StudentCourse> studentCourseList) {
+  public List<StudentDetail> convertStudentDetails(List<Student> studentList, List<StudentCourse> studentCourseList, List<ApplicationStatus> applicationStatusList) {
     List<StudentDetail> studentDetails = new ArrayList<>();
-    studentList.forEach(student -> {
-      StudentDetail studentDetail = new StudentDetail();
-      studentDetail.setStudent(student);
-
-      List<StudentCourse> convertStudentCourseList = studentCourseList.stream()
-              .filter(studentCourse -> student.getStudentId().equals(studentCourse.getStudentId()))
-              .collect(Collectors.toList());
-
-      studentDetail.setStudentsCourseList(convertStudentCourseList);
-      studentDetails.add(studentDetail);
-    });
-    return studentDetails;
+      studentList.forEach(student -> {
+          StudentDetail studentDetail = new StudentDetail();
+          studentDetail.setStudent(student);
+          List<StudentCourse> convertStudentCourseList = new ArrayList<>();
+          List<ApplicationStatus> convertApplicationStatusList = new ArrayList<>();
+          studentCourseList.stream().filter(course -> student.getStudentId().equals(course.getStudentId())).forEach(course -> {
+              convertStudentCourseList.add(course);
+              applicationStatusList.stream().filter(applicationStatus -> course.getCourseId().equals(applicationStatus.getCourseId())).forEach(convertApplicationStatusList::add);
+          });
+          studentDetail.setStudentsCourseList(convertStudentCourseList);
+          studentDetail.setApplicationStatusList(convertApplicationStatusList);
+          studentDetails.add(studentDetail);
+      });
+      return studentDetails;
   }
 }

@@ -2,11 +2,14 @@ package raisetech.StudentManagement.service;
 
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import raisetech.StudentManagement.controller.converter.StudentConverter;
+import raisetech.StudentManagement.data.ApplicationStatus;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentCourse;
 import raisetech.StudentManagement.domain.StudentDetail;
@@ -35,7 +38,8 @@ public class StudentService {
   public List<StudentDetail> searchStudentList() {
     List<Student> studentList = repository.search();
     List<StudentCourse> studentCourseList = repository.searchStudentCourseList();
-    return converter.convertStudentDetails(studentList, studentCourseList);
+    List<ApplicationStatus> applicationStatusList = repository.searchApplicationStatusList();
+    return converter.convertStudentDetails(studentList, studentCourseList, applicationStatusList);
   }
 
   /**
@@ -46,8 +50,25 @@ public class StudentService {
    */
   public StudentDetail searchStudent(String studentId) {
     Student student = repository.searchStudent(studentId);
-    List<StudentCourse> studentCourse = repository.searchStudentCourse(student.getStudentId());
-    return new StudentDetail(student, studentCourse);
+    List<StudentCourse> studentCourseList = repository.searchStudentCourse(student.getStudentId());
+    List<ApplicationStatus> applicationStatusList = new ArrayList<>();
+    for(StudentCourse studentCourse : studentCourseList) {
+      ApplicationStatus applicationStatus = repository.searchApplicationStatus(studentCourse.getCourseId());
+      applicationStatusList.add(applicationStatus);
+    }
+    return new StudentDetail(student, studentCourseList,applicationStatusList);
+  }
+
+  /**
+   * コースIDに紐づく申込状況を検索
+   *
+   * @return 申込状況
+   */
+  public ApplicationStatus searchApplicationStatus(String courseId) {
+
+    ApplicationStatus applicationStatus = repository.searchApplicationStatus(courseId);
+
+    return applicationStatus;
   }
 
   /**
@@ -62,11 +83,16 @@ public class StudentService {
     Student student = studentDetail.getStudent();
 
     repository.registerStudent(student);
-      studentDetail.getStudentsCourseList().forEach(studentCourse -> {
-        initStudentsCourse(studentCourse, student);
-        repository.registerStudentCourse(studentCourse);
-      });
-    return studentDetail;
+      for (StudentCourse studentCourse : studentDetail.getStudentsCourseList()) {
+          initStudentsCourse(studentCourse, student);
+          repository.registerStudentCourse(studentCourse);
+        for (ApplicationStatus applicationStatus : studentDetail.getApplicationStatusList()) {
+          initApplicationStatus(applicationStatus, studentCourse);
+          repository.registerApplicationStatus(applicationStatus);
+        }
+      }
+
+      return studentDetail;
   }
 
   /**
@@ -85,6 +111,17 @@ public class StudentService {
   }
 
   /**
+   * 申込状況を登録する際の初期情報を設定する
+   *
+   * @param applicationStatus 申込状況
+   * @param studentCourse 受講生コース情報
+   */
+  void initApplicationStatus(ApplicationStatus applicationStatus, StudentCourse studentCourse) {
+    LocalDateTime now = LocalDateTime.now();
+    applicationStatus.setCourseId(studentCourse.getCourseId());
+    applicationStatus.setRegistrationDate(now);
+  }
+  /**
    * 受講生詳細の更新を行います。 受講生と受講生コース情報をそれぞれ更新します。
    *
    * @param studentDetail 受講生詳細
@@ -92,7 +129,13 @@ public class StudentService {
   @Transactional
   public void updateStudent(StudentDetail studentDetail) {
     repository.updateStudent(studentDetail.getStudent());
-      studentDetail.getStudentsCourseList().forEach(studentCourse -> repository.updateStudentCourse(studentCourse));
+      for (StudentCourse studentCourse : studentDetail.getStudentsCourseList()) {
+          repository.updateStudentCourse(studentCourse);
+        for (ApplicationStatus applicationStatus : studentDetail.getApplicationStatusList()) {
+          repository.updateApplicationStatus(applicationStatus);
+        }
+      }
+
 
   }
 
