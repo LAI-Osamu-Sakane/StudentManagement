@@ -9,6 +9,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import raisetech.StudentManagement.controller.converter.StudentConverter;
+import raisetech.StudentManagement.data.ApplicationStatus;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentCourse;
 import raisetech.StudentManagement.domain.StudentDetail;
@@ -48,8 +49,10 @@ class StudentServiceTest {
 //        List<StudentDetail> expected = new ArrayList<>();
         List<Student> studentList = new ArrayList<>();
         List<StudentCourse> studentCourseList = new ArrayList<>();
+        List<ApplicationStatus> applicationStatusList = new ArrayList<>();
         when(repository.search()).thenReturn(studentList);
         when(repository.searchStudentCourseList()).thenReturn(studentCourseList);
+        when(repository.searchApplicationStatusList()).thenReturn((applicationStatusList));
 
         //実行
         List<StudentDetail> actual = sut.searchStudentList();
@@ -58,7 +61,8 @@ class StudentServiceTest {
 //        Assertions.assertEquals(expected, actual);
         verify(repository, times(1)).search();
         verify(repository, times(1)).searchStudentCourseList();
-        verify(converter, times(1)).convertStudentDetails(studentList, studentCourseList);
+        verify(repository, times(1)).searchApplicationStatusList();
+        verify(converter, times(1)).convertStudentDetails(studentList, studentCourseList, applicationStatusList);
 
         //後処理
         //データをもとに戻すなど。今回は無し
@@ -69,13 +73,19 @@ class StudentServiceTest {
 
         //事前準備
         String studentId = "999";
+        String courseId= "2";
         Student student = new Student();
         student.setStudentId(studentId);
+        StudentCourse studentCourse = new StudentCourse();
+        studentCourse.setCourseId(courseId);
         List<StudentCourse> studentCourseList = new ArrayList<>();
-        StudentDetail expected = new StudentDetail(student, new ArrayList<>());
+        ApplicationStatus applicationStatus = new ApplicationStatus();
+        List<ApplicationStatus> applicationStatusList = new ArrayList<>();
+        StudentDetail expected = new StudentDetail(student, new ArrayList<>(), new ArrayList<>());
 
         when(repository.searchStudent(studentId)).thenReturn(student);
         when(repository.searchStudentCourse(student.getStudentId())).thenReturn(studentCourseList);
+//        when(repository.searchApplicationStatus(studentCourse.getCourseId())).thenReturn(applicationStatus);
 
 
         //実行
@@ -85,6 +95,7 @@ class StudentServiceTest {
         Assertions.assertEquals(expected.getStudent().getStudentId(), actual.getStudent().getStudentId());
         verify(repository, times(1)).searchStudent(studentId);
         verify(repository, times(1)).searchStudentCourse(studentId);
+//        verify(repository, times(2)).searchApplicationStatus(courseId);
 
     }
 
@@ -94,8 +105,10 @@ class StudentServiceTest {
         //事前準備
         Student student = new Student();
         StudentCourse studentCourse = new StudentCourse();
+        ApplicationStatus applicationStatus = new ApplicationStatus();
         List<StudentCourse> studentCourseList = List.of(studentCourse);
-        StudentDetail studentDetail = new StudentDetail(student, studentCourseList);
+        List<ApplicationStatus> applicationStatusList = List.of(applicationStatus);
+        StudentDetail studentDetail = new StudentDetail(student, studentCourseList, applicationStatusList);
 
 
         //実行
@@ -112,9 +125,12 @@ class StudentServiceTest {
 
         //事前準備
         Student student = new Student();
+        List<Student> studentList = List.of(student);
         StudentCourse studentCourse = new StudentCourse();
         List<StudentCourse> studentCourseList = List.of(studentCourse);
-        StudentDetail studentDetail = new StudentDetail(student, studentCourseList);
+        ApplicationStatus applicationStatus = new ApplicationStatus();
+        List<ApplicationStatus> applicationStatusList = List.of(applicationStatus);
+        StudentDetail studentDetail = new StudentDetail(student, studentCourseList, applicationStatusList);
 
 
         //実行

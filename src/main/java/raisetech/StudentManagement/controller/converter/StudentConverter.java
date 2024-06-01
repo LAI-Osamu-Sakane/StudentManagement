@@ -25,19 +25,25 @@ public class StudentConverter {
    */
   public List<StudentDetail> convertStudentDetails(List<Student> studentList, List<StudentCourse> studentCourseList, List<ApplicationStatus> applicationStatusList) {
     List<StudentDetail> studentDetails = new ArrayList<>();
-      studentList.forEach(student -> {
-          StudentDetail studentDetail = new StudentDetail();
-          studentDetail.setStudent(student);
-          List<StudentCourse> convertStudentCourseList = new ArrayList<>();
-          List<ApplicationStatus> convertApplicationStatusList = new ArrayList<>();
-          studentCourseList.stream().filter(course -> student.getStudentId().equals(course.getStudentId())).forEach(course -> {
-              convertStudentCourseList.add(course);
-              applicationStatusList.stream().filter(applicationStatus -> course.getCourseId().equals(applicationStatus.getCourseId())).forEach(convertApplicationStatusList::add);
-          });
-          studentDetail.setStudentsCourseList(convertStudentCourseList);
-          studentDetail.setApplicationStatusList(convertApplicationStatusList);
-          studentDetails.add(studentDetail);
-      });
-      return studentDetails;
+    for (Student student : studentList) {
+      StudentDetail studentDetail = new StudentDetail();
+      studentDetail.setStudent(student);
+      List<StudentCourse> convertStudentCourseList = new ArrayList<>();
+      List<ApplicationStatus> convertApplicationStatusList = new ArrayList<>();
+      for (StudentCourse course : studentCourseList) {
+        if (student.getStudentId().equals(course.getStudentId())) {
+          convertStudentCourseList.add(course);
+          for (ApplicationStatus applicationStatus : applicationStatusList) {
+            if (course.getCourseId().equals(applicationStatus.getCourseId())) {
+              convertApplicationStatusList.add(applicationStatus);
+            }
+          }
+        }
+      }
+      studentDetail.setStudentsCourseList(convertStudentCourseList);
+      studentDetail.setApplicationStatusList(convertApplicationStatusList);
+      studentDetails.add(studentDetail);
+    }
+    return studentDetails;
   }
 }
