@@ -18,3 +18,10 @@ course_name VARCHAR(50) NOT NULL,
 starting_Date TIMESTAMP,
 scheduled_End_Date TIMESTAMP
 );
+
+CREATE TABLE application_status(
+statusId INT PRIMARY KEY AUTO_INCREMENT,
+courseId INT NOT NULL,
+status VARCHAR(5) NOT NULL,
+registration_date TIMESTAMP
+);
