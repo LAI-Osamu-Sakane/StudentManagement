@@ -33,7 +33,7 @@ jobs:
       run: ./gradlew test
 
     - name: Build with Gradle Wrapper
-      run: ./gradlew boot.Jar
+      run: ./gradlew bootJar
 
     - name: SCP Copy Application to EC2
       env:
